@@ -169,24 +169,24 @@ func TestHofs(t *testing.T) {
 			},
 			expected: &personTest{Name: "Elisa", Age: 5},
 		}
-		testFindFirstPersonOver18 := findTestingSuit{
+		testNoOneFoundReturnsNil := findTestingSuit{
 			receivedSlice: []personTest{
 				{Name: "Elisa", Age: 5},
-				{Name: "Lucas", Age: 23},
+				{Name: "Larissa", Age: 17},
 			},
-			expected: &personTest{Name: "Lucas", Age: 23},
+			expected: nil,
 		}
 
 		// * Act
 		result1 := Find(testFindTheFirstKid.receivedSlice, func(person personTest) bool { return person.Age < 12 })
-		result2 := Find(testFindFirstPersonOver18.receivedSlice, func(person personTest) bool { return person.Age >= 18 })
+		result2 := Find(testNoOneFoundReturnsNil.receivedSlice, func(person personTest) bool { return person.Age >= 18 })
 
 		// * Assert
 		if !reflect.DeepEqual(result1, testFindTheFirstKid.expected) {
 			t.Errorf("Find failed: received %+v, expected %+v", result1, testFindTheFirstKid.expected)
 		}
-		if !reflect.DeepEqual(result2, testFindFirstPersonOver18.expected) {
-			t.Errorf("Find failed: received %+v, expected %+v", result2, testFindFirstPersonOver18.expected)
+		if result2 != testNoOneFoundReturnsNil.expected {
+			t.Errorf("Find failed: received %+v, expected %+v", result2, testNoOneFoundReturnsNil.expected)
 		}
 	})
 }
