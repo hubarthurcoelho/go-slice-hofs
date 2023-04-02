@@ -30,6 +30,11 @@ type someTestingSuit struct {
 	expected      bool
 }
 
+type findTestingSuit struct {
+	receivedSlice []personTest
+	expected      *personTest
+}
+
 func TestHofs(t *testing.T) {
 	t.Run("Tests the hofs.Map function", func(t *testing.T) {
 		// * Arrange
@@ -57,7 +62,7 @@ func TestHofs(t *testing.T) {
 			t.Errorf("Map failed: received %+v, expected %+v", result1, testGettingAllNamesFromSlice.expected)
 		}
 		if !reflect.DeepEqual(result2, testGettingAllAgesFromSlice.expected) {
-			t.Errorf("Map failed: received %+v, expected %+v", result1, testGettingAllAgesFromSlice.expected)
+			t.Errorf("Map failed: received %+v, expected %+v", result2, testGettingAllAgesFromSlice.expected)
 		}
 	})
 
@@ -88,10 +93,10 @@ func TestHofs(t *testing.T) {
 
 		// * Assert
 		if !reflect.DeepEqual(result1, testYoungerThan30.expected) {
-			t.Errorf("Map failed: received %+v, expected %+v", result1, testYoungerThan30.expected)
+			t.Errorf("Filter failed: received %+v, expected %+v", result1, testYoungerThan30.expected)
 		}
 		if !reflect.DeepEqual(result2, test30OrOlder.expected) {
-			t.Errorf("Map failed: received %+v, expected %+v", result1, test30OrOlder.expected)
+			t.Errorf("Filter failed: received %+v, expected %+v", result2, test30OrOlder.expected)
 		}
 	})
 
@@ -118,10 +123,10 @@ func TestHofs(t *testing.T) {
 
 		// * Assert
 		if result1 != testIfEveryoneIsAKid.expected {
-			t.Errorf("Map failed: received %+v, expected %+v", result1, testIfEveryoneIsAKid.expected)
+			t.Errorf("Every failed: received %+v, expected %+v", result1, testIfEveryoneIsAKid.expected)
 		}
 		if result2 != testIfEveryoneIsOver18.expected {
-			t.Errorf("Map failed: received %+v, expected %+v", result1, testIfEveryoneIsOver18.expected)
+			t.Errorf("Every failed: received %+v, expected %+v", result2, testIfEveryoneIsOver18.expected)
 		}
 	})
 
@@ -148,10 +153,40 @@ func TestHofs(t *testing.T) {
 
 		// * Assert
 		if result1 != testIfSomeoneIsAKid.expected {
-			t.Errorf("Map failed: received %+v, expected %+v", result1, testIfSomeoneIsAKid.expected)
+			t.Errorf("Some failed: received %+v, expected %+v", result1, testIfSomeoneIsAKid.expected)
 		}
 		if result2 != testIfSomeoneIsOver18.expected {
-			t.Errorf("Map failed: received %+v, expected %+v", result1, testIfSomeoneIsOver18.expected)
+			t.Errorf("Some failed: received %+v, expected %+v", result2, testIfSomeoneIsOver18.expected)
+		}
+	})
+
+	t.Run("Tests the hofs.Find function", func(t *testing.T) {
+		// * Arrange
+		testFindTheFirstKid := findTestingSuit{
+			receivedSlice: []personTest{
+				{Name: "Elisa", Age: 5},
+				{Name: "Devis", Age: 30},
+			},
+			expected: &personTest{Name: "Elisa", Age: 5},
+		}
+		testFindFirstPersonOver18 := findTestingSuit{
+			receivedSlice: []personTest{
+				{Name: "Elisa", Age: 5},
+				{Name: "Lucas", Age: 23},
+			},
+			expected: &personTest{Name: "Lucas", Age: 23},
+		}
+
+		// * Act
+		result1 := Find(testFindTheFirstKid.receivedSlice, func(person personTest) bool { return person.Age < 12 })
+		result2 := Find(testFindFirstPersonOver18.receivedSlice, func(person personTest) bool { return person.Age >= 18 })
+
+		// * Assert
+		if !reflect.DeepEqual(result1, testFindTheFirstKid.expected) {
+			t.Errorf("Find failed: received %+v, expected %+v", result1, testFindTheFirstKid.expected)
+		}
+		if !reflect.DeepEqual(result2, testFindFirstPersonOver18.expected) {
+			t.Errorf("Find failed: received %+v, expected %+v", result2, testFindFirstPersonOver18.expected)
 		}
 	})
 }
