@@ -98,7 +98,6 @@ func TestHofs(t *testing.T) {
 		if !reflect.DeepEqual(result2, test30OrOlder.expected) {
 			t.Errorf("Filter failed: received %+v, expected %+v", result2, test30OrOlder.expected)
 		}
-		}
 	})
 
 	t.Run("Tests the hofs.Every function", func(t *testing.T) {
@@ -128,7 +127,6 @@ func TestHofs(t *testing.T) {
 		}
 		if result2 != testIfEveryoneIsOver18.expected {
 			t.Errorf("Every failed: received %+v, expected %+v", result2, testIfEveryoneIsOver18.expected)
-		}
 		}
 	})
 
